@@ -15,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,6 +36,8 @@ public class Student {
     @Embedded
     private Name name;
 
+    @Past
+    @NotNull
     private LocalDate dateOfBirth;
 
     @OneToMany(

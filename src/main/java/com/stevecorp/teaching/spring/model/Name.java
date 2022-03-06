@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -18,8 +19,10 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 public class Name {
 
+    @NotBlank
     private String firstName;
 
+    @NotBlank
     private String lastName;
 
 }

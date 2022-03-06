@@ -2,6 +2,7 @@ package com.stevecorp.teaching.spring.service;
 
 import com.stevecorp.teaching.spring.model.Student;
 import com.stevecorp.teaching.spring.repository.StudentRepository;
+import com.stevecorp.teaching.spring.service.exception.StudentNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,11 +37,11 @@ public class StudentService {
         studentRepository.save(student);
     }
 
-    public void addStudents(final List<Student> students) {
-        studentRepository.saveAll(students);
-    }
-
     public void updateStudent(final long id, final Student student) {
+        final boolean studentExists = studentRepository.existsById(id);
+        if (!studentExists) {
+            throw new StudentNotFoundException(id);
+        }
         student.setId(id);
         studentRepository.save(student);
     }
