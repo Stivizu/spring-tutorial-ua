@@ -22,6 +22,7 @@
 		<java.version>17</java.version>
 		<character.encoding>UTF-8</character.encoding>
 		<!-- Dependency versions -->
+		<java-faker.version>1.0.2</java-faker.version>
 	</properties>
 
 	<dependencies>
@@ -40,6 +41,11 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>${java-faker.version}</version>
 		</dependency>
 	</dependencies>
 
