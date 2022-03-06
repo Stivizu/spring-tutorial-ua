@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: "jdbc:h2:mem:tutorial-db"
+    username: sa
+    password: admin
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    generate-ddl: false
+  h2:
+    console:
+      # We enabled the H2 console, which is a GUI for the database.
+      # Since our application will shut itself down after completing its tasks, we can't visit the console yet.
+      # We'll visit the console in the next phase.
+      enabled: true

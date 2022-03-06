@@ -1,55 +1,56 @@
 package com.stevecorp.teaching.spring.service;
 
-import com.github.javafaker.Faker;
-import com.stevecorp.teaching.spring.model.Address;
-import com.stevecorp.teaching.spring.model.AddressType;
 import com.stevecorp.teaching.spring.model.Student;
+import com.stevecorp.teaching.spring.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class StudentService {
 
-    private static final Faker FAKE_DATA_GENERATOR = new Faker();
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
+    public Student getStudent(final long id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("There exists not student with id " + id + "!"));
+    }
+
+    public List<Student> getStudentsWithAddressInCity(final String zipCode) {
+        return studentRepository.findAllByAddressesZip(zipCode);
+    }
+
+    public List<Student> getStudentsBornInYear(final int year) {
+        return studentRepository.findAllBornInYear(year);
+    }
 
     public List<Student> getAllStudents() {
-        return IntStream.range(0, 10)
-                .mapToObj(index -> generateStudent())
-                .collect(Collectors.toList());
+        return studentRepository.findAll();
     }
 
-    /*
-        Since we don't have any persistence layer yet, we'll generate some fake data using the Java Faker dependency.
-     */
-    private Student generateStudent() {
-        return Student.builder()
-                .firstName(FAKE_DATA_GENERATOR.name().firstName())
-                .lastName(FAKE_DATA_GENERATOR.name().lastName())
-                .dateOfBirth(utilDateToLocalDate(FAKE_DATA_GENERATOR.date().birthday()))
-                .addresses(Collections.singletonList(
-                        Address.builder()
-                                .addressType(AddressType.DOMICILE)
-                                .street(FAKE_DATA_GENERATOR.address().streetName())
-                                .number(FAKE_DATA_GENERATOR.address().streetAddressNumber())
-                                .box(FAKE_DATA_GENERATOR.address().buildingNumber())
-                                .city(FAKE_DATA_GENERATOR.address().cityName())
-                                .zip(FAKE_DATA_GENERATOR.address().zipCode())
-                                .build()
-                ))
-                .build();
+    public void addStudent(final Student student) {
+        studentRepository.save(student);
     }
 
-    private LocalDate utilDateToLocalDate(final Date utilDate) {
-        return utilDate.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+    public void addStudents(final List<Student> students) {
+        studentRepository.saveAll(students);
+    }
+
+    public void updateStudent(final long id, final Student student) {
+        student.setId(id);
+        studentRepository.save(student);
+    }
+
+    public void deleteStudent(final long id) {
+        studentRepository.deleteById(id);
+    }
+
+    public void deleteAllStudents() {
+        studentRepository.deleteAll();
     }
 
 }
