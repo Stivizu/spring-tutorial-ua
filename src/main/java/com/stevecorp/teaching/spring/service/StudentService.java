@@ -3,9 +3,9 @@ package com.stevecorp.teaching.spring.service;
 import com.stevecorp.teaching.spring.model.Student;
 import com.stevecorp.teaching.spring.repository.StudentRepository;
 import com.stevecorp.teaching.spring.service.exception.StudentNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class StudentService {
@@ -21,16 +21,22 @@ public class StudentService {
                 .orElseThrow(() -> new RuntimeException("There exists not student with id " + id + "!"));
     }
 
-    public List<Student> getStudentsWithAddressInCity(final String zipCode) {
-        return studentRepository.findAllByAddressesZip(zipCode);
+    public Page<Student> getStudentsWithAddressInCity(
+            final String zipCode,
+            final Pageable pageable
+    ) {
+        return studentRepository.findAllByAddressesZip(zipCode, pageable);
     }
 
-    public List<Student> getStudentsBornInYear(final int year) {
-        return studentRepository.findAllBornInYear(year);
+    public Page<Student> getStudentsBornInYear(
+            final int year,
+            final Pageable pageable
+    ) {
+        return studentRepository.findAllBornInYear(year, pageable);
     }
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public Page<Student> getAllStudents(final Pageable pageable) {
+        return studentRepository.findAll(pageable);
     }
 
     public void addStudent(final Student student) {
