@@ -1,5 +1,6 @@
 package com.stevecorp.teaching.spring.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +40,13 @@ public class Student {
     @Past
     @NotNull
     private LocalDate dateOfBirth;
+
+    /*
+        Note that we need to ignore this field during JSON (de)serialization, otherwise the client could un-delete students.
+         A proper fix for this issue comes in the next branch.
+     */
+    @JsonIgnore
+    private boolean active = true;
 
     @OneToMany(
             mappedBy = "student",

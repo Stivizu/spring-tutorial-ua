@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class StudentService {
 
@@ -25,18 +27,18 @@ public class StudentService {
             final String zipCode,
             final Pageable pageable
     ) {
-        return studentRepository.findAllByAddressesZip(zipCode, pageable);
+        return studentRepository.findAllByAddressesZipAndActiveTrue(zipCode, pageable);
     }
 
     public Page<Student> getStudentsBornInYear(
             final int year,
             final Pageable pageable
     ) {
-        return studentRepository.findAllBornInYear(year, pageable);
+        return studentRepository.findAllBornInYearAndActiveTrue(year, pageable);
     }
 
     public Page<Student> getAllStudents(final Pageable pageable) {
-        return studentRepository.findAll(pageable);
+        return studentRepository.findAllByActiveTrue(pageable);
     }
 
     public void addStudent(final Student student) {
@@ -52,12 +54,17 @@ public class StudentService {
         studentRepository.save(student);
     }
 
+    /*
+        Notice how this time we do need to add the @Transactional here, as well as the @Modifying on the Repository query, since we are now using custom queries.
+     */
+    @Transactional
     public void deleteStudent(final long id) {
-        studentRepository.deleteById(id);
+        studentRepository.softDeleteById(id);
     }
 
+    @Transactional
     public void deleteAllStudents() {
-        studentRepository.deleteAll();
+        studentRepository.softDeleteAll();
     }
 
 }
